@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDistPath = path.resolve(__dirname, "../client/dist");
+const hasClientBuild = fs.existsSync(path.join(clientDistPath, "index.html"));
 
 await connectDB();
 
@@ -32,7 +34,7 @@ app.get("/api/health", (_request, response) => {
 app.use("/api/profile", profileRoutes);
 app.use("/api/contact", contactRoutes);
 
-if (process.env.NODE_ENV === "production") {
+if (hasClientBuild) {
   app.use(express.static(clientDistPath));
 
   app.get("/{*splat}", (_request, response) => {
