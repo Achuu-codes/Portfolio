@@ -35,7 +35,7 @@ app.use("/api/contact", contactRoutes);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(clientDistPath));
 
-  app.get("*", (_request, response) => {
+  app.get("/{*splat}", (_request, response) => {
     response.sendFile(path.join(clientDistPath, "index.html"));
   });
 }
